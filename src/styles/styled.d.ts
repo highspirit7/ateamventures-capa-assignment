@@ -5,6 +5,17 @@ declare module "styled-components" {
     colors: {
       primary: string;
       second: string;
+      gray: string;
+      graySub: string;
+      border: string;
+    };
+
+    breakpoints: {
+      xs: string;
+      sm: string;
+      md: string;
+      lg: string;
+      xl: string;
     };
   }
 }

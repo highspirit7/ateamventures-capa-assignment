@@ -1,7 +1,7 @@
 import React, { useRef, useEffect } from "react";
 import { createPortal } from "react-dom";
 import styled from "styled-components";
-import { up, down, between, only } from "styled-breakpoints";
+import { only } from "styled-breakpoints";
 
 import useMountTransition from "./useMountTransition";
 
