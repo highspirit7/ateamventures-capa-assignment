@@ -2,14 +2,19 @@ import React from "react";
 import styled from "styled-components";
 import { up, down, between, only } from "styled-breakpoints";
 
-import capaPartnersLogo from "assets/images/capa-partners-logo.png";
-import companyIcon from "assets/icons/company.png";
+import capaPartnersLogo from "assets/images/CAPA_partners_logo.png";
+import companyWhiteIcon from "assets/icons/company_white.png";
 import divider from "assets/icons/divider.png";
 
-const Header: React.FC = () => {
+interface IHeaderProps {
+  onClickHamburger: React.Dispatch<React.SetStateAction<boolean>>;
+  isDrawerOpen: boolean;
+}
+
+const Header: React.FC<IHeaderProps> = ({ onClickHamburger, isDrawerOpen }) => {
   return (
     <StyledHeader>
-      <HamburgerMenu>
+      <HamburgerMenu onClick={() => onClickHamburger(!isDrawerOpen)}>
         <span></span>
         <span></span>
         <span></span>
@@ -20,7 +25,7 @@ const Header: React.FC = () => {
       <StyledRightMenu>
         <li>
           <a href="#">
-            <img src={companyIcon} alt="company_icon" />A 가공 업체
+            <img src={companyWhiteIcon} alt="company_icon" />A 가공 업체
           </a>
         </li>
         <img src={divider} alt="divider" />
@@ -40,8 +45,6 @@ const StyledHeader = styled.header`
   top: 0;
   width: 100%;
   background-color: ${({ theme }) => theme.colors.primary};
-  /* font-size: 26px;
-  font-weight: 500; */
   padding: 0 40px;
   z-index: 10;
   display: flex;
@@ -84,7 +87,7 @@ const StyledRightMenu = styled.ul`
 
     img {
       margin-right: 8px;
-      margin-bottom: 1.5px;
+      margin-bottom: 1px;
     }
   }
 `;
