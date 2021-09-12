@@ -1,6 +1,6 @@
-import React, { useState, useEffect, MouseEvent } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import { down, between } from "styled-breakpoints";
+import { down, only, between } from "styled-breakpoints";
 
 import { Header } from "Components/Header";
 import { Drawer } from "Components/Drawer";
@@ -218,6 +218,11 @@ const StyledFiltersWrapper = styled.div`
   justify-content: space-between;
   align-items: center;
   margin-bottom: 32px;
+
+  ${only("xs")} {
+    flex-direction: column;
+    align-items: flex-start;
+  }
 `;
 
 const StyledResetFilterButton = styled.button`
