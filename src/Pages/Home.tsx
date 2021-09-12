@@ -24,8 +24,57 @@ const Home: React.FC = () => {
   const [isConsultingSwitchChecked, setIsConsultingSwitchChecked] =
     useState(false);
 
+  const filterRequests = () => {
+    const requestsArray = requests
+      .filter((item) => {
+        if (selectedMaterial.length > 0) {
+          let shouldBeFiltered = false;
+
+          item.material.forEach((material) => {
+            if (selectedMaterial.indexOf(material) > -1) {
+              shouldBeFiltered = true;
+            }
+          });
+
+          return shouldBeFiltered;
+        } else {
+          return true;
+        }
+      })
+      .filter((item) => {
+        if (selectedMethod.length > 0) {
+          let shouldBeFiltered = false;
+
+          item.method.forEach((method) => {
+            if (selectedMethod.indexOf(method) > -1) {
+              shouldBeFiltered = true;
+            }
+          });
+
+          return shouldBeFiltered;
+        } else {
+          return true;
+        }
+      });
+
+    setFilteredRequests(requestsArray);
+  };
+
   const handleSwitchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setIsConsultingSwitchChecked(event.target.checked);
+
+    if (event.target.checked) {
+      const consultingRequests = filteredRequests.filter(
+        (item) => item.status === "상담중",
+      );
+      console.log("토글 온");
+
+      console.log(consultingRequests);
+
+      setFilteredRequests(consultingRequests);
+    } else {
+      filterRequests();
+    }
   };
 
   const handleFilterReset = () => {
@@ -50,63 +99,9 @@ const Home: React.FC = () => {
     if (!selectedMaterial.length && !selectedMethod.length) {
       setFilteredRequests(requests);
     } else {
-      const requestsArray = requests
-        .filter((item) => {
-          if (selectedMaterial.length > 0) {
-            let shouldBeFiltered = false;
-
-            item.material.forEach((material) => {
-              if (selectedMaterial.indexOf(material) > -1) {
-                shouldBeFiltered = true;
-              }
-            });
-
-            return shouldBeFiltered;
-          } else {
-            return true;
-          }
-        })
-        .filter((item) => {
-          if (selectedMethod.length > 0) {
-            let shouldBeFiltered = false;
-
-            item.method.forEach((method) => {
-              if (selectedMethod.indexOf(method) > -1) {
-                shouldBeFiltered = true;
-              }
-            });
-
-            return shouldBeFiltered;
-          } else {
-            return true;
-          }
-        });
-
-      setFilteredRequests(requestsArray);
+      filterRequests();
     }
   }, [selectedMaterial, selectedMethod]);
-
-  // useEffect(() => {
-  //   if (selectedMethod.length > 0) {
-  //     const requestsArray = filteredRequests.filter((item) => {
-  //       let shouldBeFiltered = false;
-
-  //       item.method.forEach((method) => {
-  //         if (selectedMethod.indexOf(method) > -1) {
-  //           shouldBeFiltered = true;
-  //         }
-  //       });
-
-  //       return shouldBeFiltered;
-  //     });
-
-  //     setFilteredRequests(requestsArray);
-  //   }
-
-  //   if (!selectedMaterial.length && !selectedMethod.length) {
-  //     setFilteredRequests(requests);
-  //   }
-  // }, [selectedMethod]);
 
   return (
     <>
