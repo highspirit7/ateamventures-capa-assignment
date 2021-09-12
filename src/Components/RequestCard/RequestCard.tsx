@@ -6,6 +6,7 @@ import CardContent from "@material-ui/core/CardContent";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
 import Divider from "@material-ui/core/Divider";
+import Chip from "@material-ui/core/Chip";
 
 import { IRequest } from "api/requests";
 
@@ -17,7 +18,18 @@ const RequestCard: React.FC<IRequestCardProps> = ({ item }) => {
   return (
     <StyledCard variant="outlined">
       <StyledCardContent>
-        <Typography variant="h3">{item.title}</Typography>
+        <div
+          style={{
+            width: "100%",
+            display: "flex",
+            justifyContent: "space-between",
+          }}
+        >
+          <Typography variant="h3">{item.title}</Typography>
+          {item.status === "상담중" && (
+            <StyledChip variant="outlined" size="small" label={item.status} />
+          )}
+        </div>
         <Typography variant="h5" gutterBottom>
           {item.client}
         </Typography>
@@ -117,4 +129,10 @@ const StyledCardActions = styled(CardActions)`
     border-radius: 4px;
     color: ${({ theme }) => theme.colors.second};
   }
+`;
+
+const StyledChip = styled(Chip)`
+  border: 1px solid #ffa000;
+  border-radius: 12px;
+  color: #ffa000;
 `;
