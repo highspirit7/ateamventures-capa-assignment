@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, MouseEvent } from "react";
 import styled from "styled-components";
 import { down, between } from "styled-breakpoints";
 
@@ -6,29 +6,107 @@ import { Header } from "Components/Header";
 import { Drawer } from "Components/Drawer";
 import { RequestCard } from "Components/RequestCard";
 import { SelectFilter } from "Components/SelectFilter";
+
+import Switch from "@material-ui/core/Switch";
 import RefreshIcon from "@material-ui/icons/Refresh";
 
 import { IRequest, getRequests } from "api/requests";
 
-const materialOptions = ["알루미늄", "탄소강", "구리", "합금강", "강철"];
+const materialOptions = ["알루미늄", "탄소강", "구리", "스테인리스강", "강철"];
 const methodOptions = ["밀링", "선반"];
 
 const Home: React.FC = () => {
   const [isDrawerOpen, setIsOpen] = useState(false);
   const [requests, setRequests] = useState<IRequest[]>([]);
+  const [filteredRequests, setFilteredRequests] = useState<IRequest[]>([]);
   const [selectedMaterial, setSelectedMaterial] = useState<string[]>([]);
   const [selectedMethod, setSelectedMethod] = useState<string[]>([]);
+  const [isConsultingSwitchChecked, setIsConsultingSwitchChecked] =
+    useState(false);
+
+  const handleSwitchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setIsConsultingSwitchChecked(event.target.checked);
+  };
+
+  const handleFilterReset = () => {
+    setSelectedMaterial([]);
+    setSelectedMethod([]);
+    setFilteredRequests(requests);
+  };
 
   useEffect(() => {
     getRequests()
       .then((data) => {
         // console.log(data);
         setRequests(data);
+        setFilteredRequests(data);
       })
       .catch((error) => {
         console.error(error);
       });
   }, []);
+
+  useEffect(() => {
+    if (!selectedMaterial.length && !selectedMethod.length) {
+      setFilteredRequests(requests);
+    } else {
+      const requestsArray = requests
+        .filter((item) => {
+          if (selectedMaterial.length > 0) {
+            let shouldBeFiltered = false;
+
+            item.material.forEach((material) => {
+              if (selectedMaterial.indexOf(material) > -1) {
+                shouldBeFiltered = true;
+              }
+            });
+
+            return shouldBeFiltered;
+          } else {
+            return true;
+          }
+        })
+        .filter((item) => {
+          if (selectedMethod.length > 0) {
+            let shouldBeFiltered = false;
+
+            item.method.forEach((method) => {
+              if (selectedMethod.indexOf(method) > -1) {
+                shouldBeFiltered = true;
+              }
+            });
+
+            return shouldBeFiltered;
+          } else {
+            return true;
+          }
+        });
+
+      setFilteredRequests(requestsArray);
+    }
+  }, [selectedMaterial, selectedMethod]);
+
+  // useEffect(() => {
+  //   if (selectedMethod.length > 0) {
+  //     const requestsArray = filteredRequests.filter((item) => {
+  //       let shouldBeFiltered = false;
+
+  //       item.method.forEach((method) => {
+  //         if (selectedMethod.indexOf(method) > -1) {
+  //           shouldBeFiltered = true;
+  //         }
+  //       });
+
+  //       return shouldBeFiltered;
+  //     });
+
+  //     setFilteredRequests(requestsArray);
+  //   }
+
+  //   if (!selectedMaterial.length && !selectedMethod.length) {
+  //     setFilteredRequests(requests);
+  //   }
+  // }, [selectedMethod]);
 
   return (
     <>
@@ -52,20 +130,36 @@ const Home: React.FC = () => {
               setSelected={setSelectedMaterial}
               type="재료"
             />
-            <StyledResetFilterButton>
-              <RefreshIcon />
-              <span>필터링 리셋</span>
-            </StyledResetFilterButton>
+            {(selectedMaterial.length > 0 || selectedMethod.length > 0) && (
+              <StyledResetFilterButton onClick={handleFilterReset}>
+                <RefreshIcon />
+                <span>필터링 리셋</span>
+              </StyledResetFilterButton>
+            )}
           </div>
-          <div>상담 중인 요청만 보기</div>
+          <StyledSwitchWrapper>
+            <StyledSwitch
+              checked={isConsultingSwitchChecked}
+              onChange={handleSwitchChange}
+              color="primary"
+              name="consulting_request_toggle"
+              inputProps={{ role: "switch" }}
+            />
+            <span>상담 중인 요청만 보기</span>
+          </StyledSwitchWrapper>
         </StyledFiltersWrapper>
-        <Section>
-          {requests.length > 0 ? (
-            requests.map((item) => <RequestCard item={item} key={item.id} />)
-          ) : (
+
+        {filteredRequests.length > 0 ? (
+          <Section>
+            {filteredRequests.map((item) => (
+              <RequestCard item={item} key={item.id} />
+            ))}
+          </Section>
+        ) : (
+          <StyledNoRequestsWrapper>
             <p>조건에 맞는 견적 요청이 없습니다.</p>
-          )}
-        </Section>
+          </StyledNoRequestsWrapper>
+        )}
       </Main>
       <Drawer isOpen={isDrawerOpen} onClose={() => setIsOpen(false)} />
     </>
@@ -128,19 +222,68 @@ const StyledFiltersWrapper = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
+  margin-bottom: 32px;
 `;
 
 const StyledResetFilterButton = styled.button`
   display: flex;
   align-items: center;
+  cursor: pointer;
+
+  &:hover {
+    svg {
+      color: ${({ theme }) => theme.colors.primary};
+    }
+
+    span {
+      color: ${({ theme }) => theme.colors.primary};
+    }
+  }
 
   svg {
     color: ${({ theme }) => theme.colors.second};
   }
 
   span {
+    margin-left: 12px;
     font-size: 13px;
     line-height: 20px;
     color: ${({ theme }) => theme.colors.second};
+  }
+`;
+
+const StyledSwitchWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 20px;
+  color: ${({ theme }) => theme.colors.gray};
+`;
+
+const StyledSwitch = styled(Switch)`
+  .MuiSwitch-colorPrimary.Mui-checked {
+    color: ${({ theme }) => theme.colors.second};
+  }
+
+  .MuiSwitch-colorPrimary.Mui-checked + .MuiSwitch-track {
+    background-color: ${({ theme }) => theme.colors.third};
+  }
+`;
+
+const StyledNoRequestsWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100px;
+  border: 1px solid #c2c2c2;
+  box-sizing: border-box;
+  border-radius: 4px;
+
+  p {
+    font-size: 14px;
+    line-height: 20px;
+    color: ${({ theme }) => theme.colors.graySub};
   }
 `;

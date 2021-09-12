@@ -48,6 +48,7 @@ const SelectFilter: React.FC<ISelectFilterProps> = ({
   const useStyles = makeStyles({
     formControl: {
       width: type === "재료" ? 90 : 108,
+      marginRight: type === "재료" ? 24 : 8,
     },
   });
 
