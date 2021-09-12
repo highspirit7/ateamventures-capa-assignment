@@ -2,15 +2,17 @@ import axios from "axios";
 
 const axiosInstance = axios.create({ baseURL: "http://localhost:4000" });
 
-export type Status = "대기중" | "상담중";
+type Status = "대기중" | "상담중";
+type Method = "밀링" | "선반";
 export interface IRequest {
   id: number;
   title: string;
   client: string;
   due: string;
-  count: number;
+  count?: number;
+  docs?: number;
   amount: number;
-  method: string[];
+  method: Method[];
   material: string[];
   status: Status;
 }
