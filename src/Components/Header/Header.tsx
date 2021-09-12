@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import { up, down, between, only } from "styled-breakpoints";
+import { only } from "styled-breakpoints";
 
 import capaPartnersLogo from "assets/images/CAPA_partners_logo.png";
 import companyWhiteIcon from "assets/icons/company_white.png";

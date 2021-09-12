@@ -1,21 +1,28 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import { up, down, between, only } from "styled-breakpoints";
+import { down, between } from "styled-breakpoints";
 
 import { Header } from "Components/Header";
 import { Drawer } from "Components/Drawer";
 import { RequestCard } from "Components/RequestCard";
+import { SelectFilter } from "Components/SelectFilter";
+import RefreshIcon from "@material-ui/icons/Refresh";
 
 import { IRequest, getRequests } from "api/requests";
+
+const materialOptions = ["알루미늄", "탄소강", "구리", "합금강", "강철"];
+const methodOptions = ["밀링", "선반"];
 
 const Home: React.FC = () => {
   const [isDrawerOpen, setIsOpen] = useState(false);
   const [requests, setRequests] = useState<IRequest[]>([]);
+  const [selectedMaterial, setSelectedMaterial] = useState<string[]>([]);
+  const [selectedMethod, setSelectedMethod] = useState<string[]>([]);
 
   useEffect(() => {
     getRequests()
       .then((data) => {
-        console.log(data);
+        // console.log(data);
         setRequests(data);
       })
       .catch((error) => {
@@ -31,6 +38,27 @@ const Home: React.FC = () => {
           <h1>들어온 요청</h1>
           <h2>파트너님에게 딱 맞는 요청서를 찾아보세요.</h2>
         </MainTitle>
+        <StyledFiltersWrapper>
+          <div style={{ display: "flex" }}>
+            <SelectFilter
+              options={methodOptions}
+              selected={selectedMethod}
+              setSelected={setSelectedMethod}
+              type="가공방식"
+            />
+            <SelectFilter
+              options={materialOptions}
+              selected={selectedMaterial}
+              setSelected={setSelectedMaterial}
+              type="재료"
+            />
+            <StyledResetFilterButton>
+              <RefreshIcon />
+              <span>필터링 리셋</span>
+            </StyledResetFilterButton>
+          </div>
+          <div>상담 중인 요청만 보기</div>
+        </StyledFiltersWrapper>
         <Section>
           {requests.length > 0 ? (
             requests.map((item) => <RequestCard item={item} key={item.id} />)
@@ -93,5 +121,26 @@ const MainTitle = styled.div`
   h2 {
     font-size: 16px;
     line-height: 24px;
+  }
+`;
+
+const StyledFiltersWrapper = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+`;
+
+const StyledResetFilterButton = styled.button`
+  display: flex;
+  align-items: center;
+
+  svg {
+    color: ${({ theme }) => theme.colors.second};
+  }
+
+  span {
+    font-size: 13px;
+    line-height: 20px;
+    color: ${({ theme }) => theme.colors.second};
   }
 `;

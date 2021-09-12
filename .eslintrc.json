@@ -13,7 +13,8 @@
     "react/jsx-filename-extension": [
       "error",
       { "extensions": [".tsx", ".jsx"] }
-    ]
+    ],
+    "@typescript-eslint/ban-ts-comment": 0
   },
   "extends": [
     "plugin:react/recommended", // Uses the recommended rules from @eslint-plugin-react

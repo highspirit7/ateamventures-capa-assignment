@@ -1,5 +1,5 @@
 import React from "react";
-import { ThemeProvider } from "styled-components";
+import { ThemeProvider as StyledThemeProvider } from "styled-components";
 import { StylesProvider } from "@material-ui/styles";
 
 import GlobalStyles from "styles/GlobalStyles";
@@ -10,10 +10,10 @@ import Home from "Pages/Home";
 const App: React.FC = () => {
   return (
     <StylesProvider injectFirst>
-      <ThemeProvider theme={theme}>
+      <StyledThemeProvider theme={theme}>
         <GlobalStyles />
         <Home />
-      </ThemeProvider>
+      </StyledThemeProvider>
     </StylesProvider>
   );
 };
