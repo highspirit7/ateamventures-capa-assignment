@@ -4,6 +4,8 @@ const axiosInstance = axios.create({ baseURL: "http://localhost:4000" });
 
 type Status = "대기중" | "상담중";
 type Method = "밀링" | "선반";
+type Material = "알루미늄" | "탄소강" | "구리" | "스테인리스강" | "강철";
+
 export interface IRequest {
   id: number;
   title: string;
@@ -13,7 +15,7 @@ export interface IRequest {
   docs?: number;
   amount: number;
   method: Method[];
-  material: string[];
+  material: Material[];
   status: Status;
 }
 
