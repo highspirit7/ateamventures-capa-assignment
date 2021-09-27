@@ -111,5 +111,3 @@ const HamburgerMenu = styled.div`
     background-color: white;
   }
 `;
-
-const StyledDrawer = styled.div``;
