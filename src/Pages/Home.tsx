@@ -67,9 +67,6 @@ const Home: React.FC = () => {
       const consultingRequests = filteredRequests.filter(
         (item) => item.status === "상담중",
       );
-      console.log("토글 온");
-
-      console.log(consultingRequests);
 
       setFilteredRequests(consultingRequests);
     } else {

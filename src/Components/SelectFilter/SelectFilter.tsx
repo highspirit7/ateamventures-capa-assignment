@@ -100,7 +100,7 @@ export default SelectFilter;
 const StyledSelect = styled(Select)`
   border: 1px solid ${({ theme }) => theme.colors.graySub};
   border-radius: 4px;
-  /* background: #fff; */
+
   background: ${(props) =>
     props.value.length > 0 ? props.theme.colors.primary : "#fff"};
 
@@ -131,7 +131,6 @@ const StyledSelect = styled(Select)`
 
   svg {
     margin-right: 10px;
-    /* color: ${({ theme }) => theme.colors.graySub}; */
     color: ${(props) =>
       props.value.length > 0 ? "#fff" : props.theme.colors.graySub};
   }
